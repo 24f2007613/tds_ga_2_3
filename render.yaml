@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: tds-ga2
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /healthz
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.3
+      - key: STUDENT_EMAIL
+        sync: false
+      - key: REDIS_URL
+        fromService:
+          type: keyvalue
+          name: tds-redis
+          property: connectionString
+  - type: keyvalue
+    name: tds-redis
+    plan: free
+    ipAllowList: []
