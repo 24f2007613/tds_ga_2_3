@@ -49,7 +49,11 @@ def _os_layer() -> dict:
 def _cli_layer(request: Request) -> dict:
     out = {}
     for k, v in request.query_params.multi_items():
-        if k.lower().startswith("set-") and len(k) > 4:
+        kl = k.lower()
+        if kl == "set" and "=" in v:            # ?set=port=8851&set=debug=true
+            key, val = v.split("=", 1)
+            out[_norm(key)] = val
+        elif kl.startswith("set-") and len(k) > 4:  # ?set-port=8851 (also accepted)
             out[_norm(k[4:])] = v
     return out
 

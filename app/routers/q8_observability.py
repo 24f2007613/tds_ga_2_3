@@ -15,7 +15,7 @@ async def work(n: int = Query(1, ge=0)):
     acc = 0
     for i in range(min(n, 1_000_000)):  # K units of (cheap) work
         acc = (acc * 31 + i) % 1_000_003
-    return {"email": STUDENT_EMAIL, "done": True, "k": n}
+    return {"email": STUDENT_EMAIL, "done": n}
 
 
 @router.get("/metrics", response_class=PlainTextResponse)

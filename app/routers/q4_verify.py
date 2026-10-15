@@ -30,7 +30,15 @@ async def verify(request: Request):
             options={"require": ["exp", "iss", "aud"], "verify_exp": True},
         )
     except Exception as e:  # signature, expiry, aud, iss, malformed, bad key...
-        log.info("rejected token: %s", type(e).__name__)
+        info = {}
+        try:
+            info = jwt.decode(token, options={"verify_signature": False})
+        except Exception:
+            pass
+        print("VERIFY_REJECTED", type(e).__name__, str(e)[:200],
+              "| token iss/aud/exp:", info.get("iss"), info.get("aud"), info.get("exp"),
+              "| expected iss/aud:", OIDC_ISSUER, OIDC_AUDIENCE,
+              "| key_loaded:", "PASTE_THE_PUBLIC_KEY" not in load_public_key(), flush=True)
         return _invalid()
     return {"valid": True, "email": claims.get("email"),
             "sub": claims.get("sub"), "aud": claims.get("aud")}

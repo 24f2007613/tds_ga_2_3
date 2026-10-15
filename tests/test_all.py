@@ -60,6 +60,8 @@ def test_q5():
     j = c.get("/effective-config?set-port=9000&set-debug=TRUE&set-workers=3&set-log_level=debug&set-api_key=zzz").json()
     assert j == {"port": 9000, "workers": 3, "debug": True, "log_level": "debug", "api_key": "*****"}
     assert c.get("/effective-config?set-debug=No").json()["debug"] is False
+    j = c.get("/effective-config?set=port=8851&set=log_level=debug").json()
+    assert j["port"] == 8851 and j["log_level"] == "debug" and j["workers"] == 1
 
 def test_q6():
     assert c.get("/count/k1").json() == {"key": "k1", "count": 0}
@@ -88,7 +90,7 @@ def val():
 def test_q8():
     b = val()
     for n in (1, 5, 7, 2):
-        assert c.get(f"/work?n={n}").json() == {"email": "me@x.com", "done": True, "k": n}
+        assert c.get(f"/work?n={n}").json() == {"email": "me@x.com", "done": n}
     assert val() >= b + 4
     assert c.get("/healthz").json()["uptime_s"] >= 0
     t = c.get("/logs/tail?limit=10").json()
