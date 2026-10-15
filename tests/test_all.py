@@ -56,9 +56,9 @@ def test_q4():
 
 def test_q5():
     j = c.get("/effective-config").json()
-    assert j == {"port": 8000, "workers": 1, "debug": False, "log_level": "info", "api_key": "*****"}
+    assert j == {"port": 8000, "workers": 1, "debug": False, "log_level": "info", "api_key": "****"}
     j = c.get("/effective-config?set-port=9000&set-debug=TRUE&set-workers=3&set-log_level=debug&set-api_key=zzz").json()
-    assert j == {"port": 9000, "workers": 3, "debug": True, "log_level": "debug", "api_key": "*****"}
+    assert j == {"port": 9000, "workers": 3, "debug": True, "log_level": "debug", "api_key": "****"}
     assert c.get("/effective-config?set-debug=No").json()["debug"] is False
     j = c.get("/effective-config?set=port=8851&set=log_level=debug").json()
     assert j["port"] == 8851 and j["log_level"] == "debug" and j["workers"] == 1

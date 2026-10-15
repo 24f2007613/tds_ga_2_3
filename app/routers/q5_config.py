@@ -81,5 +81,5 @@ async def effective_config(request: Request):
     for layer in (DEFAULTS, _yaml_layer(), _dotenv_layer(), _os_layer(), _cli_layer(request)):
         merged.update(layer)  # later layers win: defaults<yaml<.env<OS env<CLI
     result = {k: _coerce(k, v) for k, v in merged.items()}
-    result["api_key"] = "*****"  # never expose the real secret
+    result["api_key"] = "****"  # never expose the real secret
     return result
